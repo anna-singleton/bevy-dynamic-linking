@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: build executables
+  build-linux:
+    name: build linux executable
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -23,18 +23,10 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: bevy-build
-
-      - name: Install windows target
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: x86_64-pc-windows-gnu
       - name: Install build dependencies
-        run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev gcc-mingw-w64-x86-64 lld
+        run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev lld
       - name: Build Linux Executable
         run: cargo build --verbose --release --no-default-features
-      - name: Build Windows Executable
-        run: cargo build --verbose --target=x86_64-pc-windows-gnu --release --no-default-features
       - name: prepare linux release
         run: mkdir linux-release; mv target/release/bevy-dynamic linux-release/; cp assets linux-release/assets -r
       - name: zip linux release
@@ -43,6 +35,34 @@ jobs:
           type: 'zip'
           filename: 'linux_x86-64.zip'
           path: linux-release/*
+      - name: Release binary to GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            linux_x86-64.zip
+  build-windows:
+    name: build windows executable
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: bevy-build
+      - name: Install windows target
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-pc-windows-gnu
+      - name: Install build dependencies
+        run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev gcc-mingw-w64-x86-64 lld
+      - name: Build Windows Executable
+        run: cargo build --verbose --target=x86_64-pc-windows-gnu --release --no-default-features
       - name: prepare windows release
         run: mkdir windows-release; mv target/x86_64-pc-windows-gnu/release/bevy-dynamic.exe windows-release/; cp assets windows-release/assets -r
       - name: zip windows release
@@ -55,5 +75,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            linux_x86-64.zip
             windows_x86-64.zip
