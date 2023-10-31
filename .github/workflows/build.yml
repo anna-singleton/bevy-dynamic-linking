@@ -22,7 +22,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ github.ref || github.run_id }}
+          key: ${{ runner.os }}
       - name: Install windows target
         uses: actions-rs/toolchain@v1
         with:
