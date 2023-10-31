@@ -23,7 +23,8 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ github.ref || github.run_id }}
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Install windows target
+        uses: actions-rs/toolchain@v1
         toolchain: stable
         target: x86_64-pc-windows-msvc
       - name: Install build dependencies
