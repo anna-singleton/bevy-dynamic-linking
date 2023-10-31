@@ -11,3 +11,7 @@ default = ['bevy/dynamic_linking']
 [dependencies]
 bevy = "0.11.3"
 rand = "0.8.5"
+
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = ["-Clink-arg=-fuse-ld=lld"]

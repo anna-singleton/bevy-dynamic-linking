@@ -34,7 +34,7 @@ jobs:
           toolchain: stable
           target: x86_64-pc-windows-gnu
       - name: Install build dependencies
-        run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev gcc-mingw-w64-x86-64
+        run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev gcc-mingw-w64-x86-64 lld
       - name: Build Linux Executable
         run: cargo build --verbose --release --no-default-features
       - name: Build Windows Executable
