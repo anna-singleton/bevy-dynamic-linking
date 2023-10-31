@@ -14,17 +14,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: bevy-build
       - name: Install build dependencies
         run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev lld
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
       - name: Build Linux Executable
         run: cargo build --verbose --release --no-default-features
       - name: prepare linux release
@@ -45,20 +38,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: bevy-build
       - name: Install windows target
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           target: x86_64-pc-windows-gnu
+      - name: Rust cache
+        uses: Swatinem/rust-cache@v2
       - name: Install build dependencies
         run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev gcc-mingw-w64-x86-64 lld
       - name: Build Windows Executable
