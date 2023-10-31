@@ -34,9 +34,25 @@ jobs:
         run: cargo build --verbose --release --no-default-features
       - name: Build Windows Executable
         run: cargo build --verbose --target=x86_64-pc-windows-gnu --release --no-default-features
+      - name: prepare linux release
+        run: mkdir linux-release; mv target/release/bevy-dynamic linux-release/; cp assets linux-release/assets -r
+      - name: zip linux release
+        uses: TheDoctor0/zip-release@0.6.2
+          with:
+            type: 'zip'
+            filename: 'linux_x86-64.zip'
+            path: linux-release/*
+      - name: prepare windows release
+        run: mkdir windows-release; mv target/x86_64-pc-windows-gnu/release/bevy-dynamic.exe windows-release/; cp assets windows-release/assets -r
+      - name: zip windows release
+        uses: TheDoctor0/zip-release@0.6.2
+          with:
+            type: 'zip'
+            filename: 'windows_x86-64.zip'
+            path: windows-release/*
       - name: Release binary to GitHub
         uses: softprops/action-gh-release@v1
         with:
           files: |
-              target/x86_64-pc-windows-gnu/release/bevy-dynamic.exe
-              target/release/bevy-dynamic
+            linux_x86-64.zip
+            windows_x86-64.zip
