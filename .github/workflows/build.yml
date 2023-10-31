@@ -25,8 +25,9 @@ jobs:
           key: ${{ github.ref || github.run_id }}
       - name: Install windows target
         uses: actions-rs/toolchain@v1
-        toolchain: stable
-        target: x86_64-pc-windows-msvc
+        with:
+          toolchain: stable
+          target: x86_64-pc-windows-msvc
       - name: Install build dependencies
         run: sudo apt-get update; sudo apt-get install libasound2-dev libudev-dev gcc-mingw-w64-x86-64
       - name: Build Linux Executable
