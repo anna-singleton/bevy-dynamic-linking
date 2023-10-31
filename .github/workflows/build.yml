@@ -23,8 +23,9 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ runner.os }}-build-${{ github.ref }}
-          restore-key: |
+          restore-keys: |
             ${{ runner.os }}-build-${{ github.ref }}
+            ${{ runner.os }}-build-
             ${{ runner.os }}
 
       - name: Install windows target
